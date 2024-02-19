@@ -37,4 +37,5 @@ class SInterpreter:
         elif token.token_code == EToken.ERROR:
             print(f"Error for operator: {token.token_code}")
             return False
+        print()
         return True 

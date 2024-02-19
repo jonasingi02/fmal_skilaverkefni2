@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Check if an argument was provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: ./run <E program file>"
+  exit 1
+fi
+
+# Run ecompiler.py and pass the input file, then pipe its output to sinterpreter.py
+python3 ecompiler.py < "$1" | python3 sinterpreter.py
