@@ -2,14 +2,20 @@ from EToken import EToken
 from eparser import EParser
 class SInterpreter:
     def __init__(self) -> None:
+        self.parser = EParser()
         self.stack = []
         self.env = {}
-        pass
 
-    def cycle():
-        pass
+    def cycle(self):
+        while True:
+            stdin = input() 
+            if not stdin: 
+                break
+            token = self.parser.parse(stdin)  
+            if not self.interpret(token):
+                break
     
-    def interpret(self, token):
+    def interpret(self, token: EToken):
         if token.token_type == EToken.INT:
             self.stack.append(int(token.lexeme))
         elif token.token_type == EToken.ID:
@@ -29,6 +35,6 @@ class SInterpreter:
         elif token.token_type == EToken.END:
             return False
         elif token.token_type == EToken.ERROR:
-            print("Error: Unrecognized token")
+            print(f"Error for operator: {token.token_type}")
             return False
         return True 
