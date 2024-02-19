@@ -1,7 +1,18 @@
 class EToken:
+    ID = 0
+    ASSIGN = 1
+    SEMICOL = 2
+    INT = 3
+    PLUS = 4
+    MINUS = 5
+    MULT = 6
+    LPAREN = 7
+    RPAREN = 8
+    PRINT = 9
+    END = 10
+    ERROR = 11
+    
     def __init__(self, lexeme, token_type):
         self.lexeme = lexeme
         self.token_type = token_type
 
-    def __str__(self):
-        return f"Lexeme: {self.lexeme}, Token type: {self.token_type}"
