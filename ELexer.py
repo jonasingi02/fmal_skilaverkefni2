@@ -4,6 +4,7 @@ from EToken import EToken
 
 class ELexer:
     def __init__(self):
+        self.token = EToken()
         self.current_char = None
         self.next_char = None
     def get_next_token(self):

@@ -1,36 +1,29 @@
+from ELexer import ELexer
+
 class EParser():
 
     def __init__(self):
+        self.lexer = ELexer()
         self.interCode = []
+        self.curr_token = None
 
-    def main(self, code):
-        self.tokens = code.split()
-        self.curr_token_nr = 0
-        self.eparser()
+    def parse(self):
+        self.curr_token = self.next_token()
+        self.statements()
 
-    def get_next_token(self):
-        if self.curr_token_nr < len(self.tokens):
-            token = self.tokens[self.curr_token_nr]
-            self.curr_token_nr += 1
-            self.next_token = token
-            return token
-        return None
-
-    def validate_token(self, expected_token):
-        if expected_token == 'id' and self.next_token.isidentifier() or self.next_token == expected_token or expected_token == 'int' and isinteger(self.next_token):
-            return True
-        return False
-    
-
+    def next_token(self):
+        self.curr_token = self.lexer.get_next_token()
+        if self.curr_token == EToken.ERROR: # lexical error
+            self.error()   
         
-    def eparser(self):
+    def statements(self):
         self.parse()
         self.get_next_token()
         while(self.next_token == ";"):
             self.parse()
         self.validate_token("end")
 
-    def parse(self):
+    def statement(self):
         self.get_next_token()
         if self.validate_token('print'):
             self.get_next_token()
