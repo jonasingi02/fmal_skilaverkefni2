@@ -1,6 +1,6 @@
 from EToken import EToken
 from ELexer import ELexer
-from EParser import Eparser
+from eparser import EParser
 
 lexer = ELexer()
 parser = EParser(lexer)
