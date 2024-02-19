@@ -1,5 +1,5 @@
-from etoken import EToken
-from elexer import ELexer
+from EToken import EToken
+from ELexer import ELexer
 
 if __name__ == "__main__":
     lexer = ELexer()

@@ -1,4 +1,4 @@
-class intermediateCodeGenerator():
+class EParser():
 
     def __init__(self):
         self.interCode = []
