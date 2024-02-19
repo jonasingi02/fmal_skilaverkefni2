@@ -6,6 +6,7 @@ class ELexer:
     def __init__(self):
         self.current_char = None
         self.next_char = None
+
     def get_next_token(self):
         self.read_char()
 
