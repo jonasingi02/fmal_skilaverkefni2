@@ -16,25 +16,25 @@ class SInterpreter:
                 break
     
     def interpret(self, token: EToken):
-        if token.token_type == EToken.INT:
+        if token.token_code == EToken.INT:
             self.stack.append(int(token.lexeme))
-        elif token.token_type == EToken.ID:
+        elif token.token_code == EToken.ID:
             self.stack.append(token.lexeme)
-        elif token.token_type == EToken.ASSIGN:
+        elif token.token_code == EToken.ASSIGN:
             self.env[self.stack.pop()] = self.stack.pop()
-        elif token.token_type == EToken.PLUS:
+        elif token.token_code == EToken.PLUS:
             self.stack.append(self.stack.pop() + self.stack.pop())
-        elif token.token_type == EToken.MINUS:
+        elif token.token_code == EToken.MINUS:
             self.stack.append(self.stack.pop() - self.stack.pop())
-        elif token.token_type == EToken.MULT:
+        elif token.token_code == EToken.MULT:
             self.stack.append(self.stack.pop() * self.stack.pop())
-        elif token.token_type == EToken.PRINT:
+        elif token.token_code == EToken.PRINT:
             print(self.stack.pop())
-        elif token.token_type == EToken.SEMICOL:
+        elif token.token_code == EToken.SEMICOL:
             pass
-        elif token.token_type == EToken.END:
+        elif token.token_code == EToken.END:
             return False
-        elif token.token_type == EToken.ERROR:
-            print(f"Error for operator: {token.token_type}")
+        elif token.token_code == EToken.ERROR:
+            print(f"Error for operator: {token.token_code}")
             return False
         return True 
