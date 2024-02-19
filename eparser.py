@@ -1,56 +1,40 @@
+import sys
 from ELexer import ELexer
 
-class EParser():
-
+class EParser:
     def __init__(self):
         self.lexer = ELexer()
         self.interCode = []
-        self.curr_token = None
+        self.current_token = None
 
     def parse(self):
-        self.curr_token = self.next_token()
+        self.current_token = self.next_token()
         self.statements()
 
     def next_token(self):
-        self.curr_token = self.lexer.get_next_token()
-        if self.curr_token == EToken.ERROR: # lexical error
-            self.error()   
-        
+        return self.lexer.get_next_token()
+
     def statements(self):
-        self.parse()
-        self.get_next_token()
-        while(self.next_token == ";"):
-            self.parse()
-        self.validate_token("end")
+        self.statement()
+        while self.current_token.token_code == ELexer.SEMICOL:
+            self.next_token()
+            self.statement()
 
     def statement(self):
-        self.get_next_token()
-        if self.validate_token('print'):
-            self.get_next_token()
-            var = self.validate_token('id')
-            if (var):
-                var = self.next_token
-            self.interCode.append(f'PUSH {var}')
-            self.interCode.append('PRINT')
-        elif self.validate_token("id"):
-            if self.next_token == 'end':
-                pass
-            else:
-                var = self.next_token
-                self.get_next_token()
-                self.validate_token('=')
-                self.get_next_token()
+        if self.current_token.token_code == ELexer.PRINT:
+            self.next_token()
+            self.expr()
+        elif self.current_token.token_code == ELexer.ID:
+            self.next_token()
+            if self.current_token and self.current_token.token_code == ELexer.ASSIGN:
+                self.next_token()
                 self.expr()
-                self.interCode.append(f'ASSIGN')
-                self.interCode.append(f'PUSH {var}')
-        else:
-            raise SyntaxError(f'Unexpected token: {self.next_token}')
 
     def expr(self):
         self.term()
-        while self.next_token in ('+', '-'):
-            op = self.next_token
-            self.get_next_token()
+        while self.current_token.token_code in (ELexer.PLUS, ELexer.MINUS):
+            op = self.current_token.lexeme
+            self.next_token()
             self.term()
             if op == '+':
                 self.interCode.append('ADD')
@@ -59,39 +43,41 @@ class EParser():
 
     def term(self):
         self.factor()
-        while self.next_token == '*':
-            self.get_next_token()
+        while self.current_token and self.current_token.token_code == ELexer.MULT:
+            self.next_token()
             self.factor()
             self.interCode.append('MULT')
 
     def factor(self):
-        if self.validate_token('int'):
-            value = self.next_token
+        if self.current_token and self.current_token.token_code == ELexer.INT:
+            value = self.current_token.lexeme
             self.interCode.append(f'PUSH {value}')
-            self.get_next_token()
-        elif self.next_token == 'id':
-            var = self.next_token
+            self.next_token()
+        elif self.current_token and self.current_token.token_code == ELexer.ID:
+            var = self.current_token.lexeme
             self.interCode.append(f'PUSH {var}')
-            self.get_next_token()
-        elif self.next_token == '(':
-            self.get_next_token()
+            self.next_token()
+        elif self.current_token and self.current_token.token_code == ELexer.LPAREN:
+            self.next_token()
             self.expr()
-            self.validate_token(')')
-            self.get_next_token()
+            if self.current_token and self.current_token.token_code == ELexer.RPAREN:
+                self.next_token()
+            else:
+                raise SyntaxError("Expected ')' but got end of input")
         else:
-            raise SyntaxError(f'Unexpected token: {self.next_token}')
-        
+            raise SyntaxError(f'Unexpected token: {self.current_token.lexeme}')
 
-def isinteger(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
-        
-input_str = "print x ; y = 5 + ( 3 * 2 ) ; end"
-generator = intermediateCodeGenerator()
-generator.main(input_str)
+    def is_integer(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
 
-for code_line in generator.interCode:
-    print(code_line)
+if __name__ == "__main__":
+    parser = EParser()
+    parser.parse()
+
+    # Print the generated intermediate code
+    for code_line in parser.interCode:
+        print(code_line)

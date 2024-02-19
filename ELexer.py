@@ -4,7 +4,6 @@ from EToken import EToken
 
 class ELexer:
     def __init__(self):
-        self.token = EToken()
         self.current_char = None
         self.next_char = None
     def get_next_token(self):
@@ -21,25 +20,25 @@ class ELexer:
             return self.tokenize_id()
         elif self.current_char == '+':
             token = self.current_char
-            return EToken(token, "PLUS")
+            return EToken(token, EToken.PLUS)
         elif self.current_char == '-':
             token = self.current_char
-            return EToken(token, "MINUS")
+            return EToken(token, EToken.MINUS)
         elif self.current_char == '*':
             token = self.current_char
-            return EToken(token, "MULT")
+            return EToken(token, EToken.MULT)
         elif self.current_char == '(':
             token = self.current_char
-            return EToken(token, "LPAREN")
+            return EToken(token, EToken.LPAREN)
         elif self.current_char == ')':
             token = self.current_char
-            return EToken(token, "RPAREN")
+            return EToken(token, EToken.RPAREN)
         elif self.current_char == '=':
             token = self.current_char
-            return EToken(token, "ASSIGN")
+            return EToken(token, EToken.ASSIGN)
         elif self.current_char == ';':
             token = self.current_char
-            return EToken(token, "SEMICOL")
+            return EToken(token, EToken.SEMICOL)
         else:
             return self.tokenize_error()
 
@@ -55,7 +54,7 @@ class ELexer:
                 self.read_char()
             else:
                 break
-        return EToken(result, "INT")
+        return EToken(result, EToken.INT)
 
     def tokenize_id(self):
         result = ''
@@ -66,35 +65,13 @@ class ELexer:
             else:
                 break
         if result == 'end':
-            return EToken(result, "END")
+            return EToken(result, EToken.END)
         elif result == 'print':
-            return EToken(result, "PRINT")
+            return EToken(result, EToken.PRINT)
         else:
-            return EToken(result, "ID")
-
-    def tokenize_keyword(self):
-        result = ''
-        while self.current_char and self.current_char.isalpha():
-            result += self.current_char
-            self.read_char()
-        if result == 'end':
-            return EToken(result, "END")
-        elif result == 'print':
-            return EToken(result, "PRINT")
-        else:
-            return 'ID'
+            return EToken(result, EToken.ID)
 
     def tokenize_error(self):
         token = self.current_char
         self.read_char()
         return f'ERROR: {token}'
-
-
-if __name__ == "__main__":
-    lexer = ELexer()
-
-    while True:
-        token = lexer.get_next_token()
-        if token.token_type == "END":
-            break
-        print(token)

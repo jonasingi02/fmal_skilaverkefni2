@@ -12,7 +12,6 @@ class EToken:
     END = 10
     ERROR = 11
     
-    def __init__(self, lexeme, token_type):
+    def __init__(self, lexeme, token_code):
         self.lexeme = lexeme
-        self.token_type = token_type
-
+        self.token_code = token_code
